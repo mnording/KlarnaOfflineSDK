@@ -19,10 +19,10 @@ namespace Klarna.Offline
         Klarna.Entities.Cart cart;
         Uri postbackUri;
         string klarnaId;
-        string statusUrl;
+        Uri statusUrl;
         string terminalId;
         /// <summary>
-        /// 
+        ///  Initiating a new Klarna Offline Order 
         /// </summary>
         /// <param name="cart">The cart for the order</param>
         /// <param name="config">The merchant config to be used</param>
@@ -43,7 +43,7 @@ namespace Klarna.Offline
             
         }
         /// <summary>
-        /// 
+        /// Initiating a new Klarna Offline Order 
         /// </summary>
         /// <param name="cart">The cart for the order</param>
         /// <param name="config">The merchant config to be used</param>
@@ -56,7 +56,7 @@ namespace Klarna.Offline
            
         }
         /// <summary>
-        /// 
+        /// Initiating a new Klarna Offline Order 
         /// </summary>
         /// <param name="cart">The cart for the order</param>
         /// <param name="config">The merchant config to be used</param>
@@ -109,18 +109,18 @@ namespace Klarna.Offline
                 status = Status.Pending;
                 if(orderResponse["status_uri"] != null)
                 {
-                    statusUrl = orderResponse["status_uri"].ToString();
+                    statusUrl = new Uri(orderResponse["status_uri"].ToString());
                     status = Status.Polling;
                 }
             }
            
         }
         /// <summary>
-        /// Will fetch data from klarna endpoint to find customer information
+        /// Will fetch data from Klarna endpoint to find customer information
         /// </summary>
         /// <param name="url">Url to poll</param>
         /// <returns>OrderDtails Object if purchase is complete</returns>
-        public OrderDetails pollData(string url)
+        public OrderDetails pollData(Uri url)
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
             var digest = digestCreator.CreateOffline(config.MerchantId, config.SharedSecret);
@@ -147,6 +147,23 @@ namespace Klarna.Offline
             }
            
            
+        }
+        /// <summary>
+        /// Cancels the order
+        /// </summary>
+        public void Cancel()
+        {
+            if(klarnaId == String.Empty)
+            {
+                throw new Exception("Cannot cancel an order that has not been created");
+            }
+            WebRequest request = WebRequest.Create("https://buy.playground.klarna.com/v1/" + config.MerchantId + "/orders"+this.klarnaId+"/cancel");
+            request.Method = "POST";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                throw new Exception("Something went wrong with the cancellation");
+            }
         }
         
         public string mobile_no
@@ -188,6 +205,6 @@ namespace Klarna.Offline
         {
             return status;
         }
-        public string GetStatusUrl() { return statusUrl; }
+        public Uri GetStatusUrl() { return statusUrl; }
     }
 }

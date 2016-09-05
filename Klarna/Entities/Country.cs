@@ -8,6 +8,7 @@ namespace Klarna.Entities
 {
     public static class Country
     {
+       
         public static string SE
         {
             get { return "SE"; }
