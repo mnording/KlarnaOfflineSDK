@@ -13,8 +13,6 @@ namespace Klarna.Offline.Entities
         string locale;
         string purchaseCurrency;
         string purchaseCountry;
-        string terminalId;
-        string postbackUrl;
         string merchantId;
         string sharedSecret;
         Server server;
@@ -50,10 +48,6 @@ namespace Klarna.Offline.Entities
         public string Country
         {
             get { return purchaseCountry; }
-        }
-        public string TerminalId
-        {
-            get { return terminalId; }
         }
         public string Locale
         {

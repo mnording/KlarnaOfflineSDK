@@ -110,8 +110,6 @@ namespace Klarna.Offline
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(ob.ToString());
-                streamWriter.Flush();
-                streamWriter.Close();
             }
             WebResponse response = request.GetResponse();
             status = Status.Sent;
@@ -155,7 +153,7 @@ namespace Klarna.Offline
                    
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return null;
             }
