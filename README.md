@@ -24,20 +24,20 @@ cart.addDiscount(new CartRow("discount-1", "Summer sales", 1, -1000,25));
 
 ##  Creating the order
 First you send in the cart and config and an optional push url
-Use polling method
+**Use polling method**
 By only starting the order, you will receive a status url hosted by klarna that will communicate the order details once the customer has completed the purchase.
 
  ```c#
 OfflineOrder offlineOrder = new OfflineOrder(cart, config, "terminal", phone, "Merchant_OrderReference");
  ```
-Use push Url Method
+**Use push Url Method** 
 If you define a status url, then order-data will be pushed to that url when customer has completed the purchase.
 
 ```c#
 OfflineOrder offlineOrder = new OfflineOrder(cart, config, "terminal", phone, "1", new Uri("https://URLThatShouldReceiveOrderInformation.com"));
 ```
 
-** Create the order **  
+**Create the order**  
 The create call will create the actual KCO session and send out the SMS to the consumer
 ```c#
 offlineOrder.Create();
@@ -45,7 +45,7 @@ offlineOrder.Create();
 
 If you did not define your own status URL, Klarna will create one for you that you will use for polling the result of the transaction
 
-** Cancel ongoing order ** 
+**Cancel ongoing order** 
 ```c#
 offlineOrder.Cancel();
 ```

@@ -8,8 +8,7 @@ namespace OfflineTest
     public class MerchantConfigTest
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException),
-    "Country not supported")]
+        [ExpectedException(typeof(ArgumentException))]
         public void MustNotBeAbleToInitWrongCountry()
         {
             var t = new MerchantConfig(new System.Globalization.CultureInfo(1),"SEK","DE","test","test",MerchantConfig.Server.Live);
@@ -21,8 +20,7 @@ namespace OfflineTest
             Assert.AreNotEqual(null, t);
         }
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException),
-    "Currency not supported")]
+        [ExpectedException(typeof(ArgumentException))]
         public void MustNotBeAbleToInitWrongCurrency()
         {
             var t = new MerchantConfig(new System.Globalization.CultureInfo(1), "EUR", "SE", "test", "test", MerchantConfig.Server.Live);

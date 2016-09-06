@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MerchantConfigTest.cs" />
+    <Compile Include="JsonConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Offline\Offline.csproj">
