@@ -8,7 +8,8 @@ The full API specs are avaliable at apiary -> http://docs.klarnaoffline.apiary.i
 
 Firstly you create a config of the current culture, your currency, country, shared secret and store ID.
 ```c#
-		   MerchantConfig config =MerchantConfig(CultureInfo.CurrentCulture, Currency.SEK, Country.SE, "sDOWW9d9oGZZ4bw", "7262");```
+MerchantConfig config =MerchantConfig(CultureInfo.CurrentCulture, Currency.SEK, Country.SE, "sDOWW9d9oGZZ4bw", "7262");
+```
 You then create a cart, and populate it with items
 ```c#
 Cart cart = new Cart();  
@@ -33,7 +34,7 @@ Use push Url Method
 If you define a status url, then order-data will be pushed to that url when customer has completed the purchase.
 
 ```c#
-OfflineOrder offlineOrder = new OfflineOrder(cart, config, "terminal", phone, "1", new Uri("https://mockbin.org/bin/f53a5914-dadd-4ed4-90c0-b0e647b91d2b"));
+OfflineOrder offlineOrder = new OfflineOrder(cart, config, "terminal", phone, "1", new Uri("https://URLThatShouldReceiveOrderInformation.com"));
 ```
 
 ** Create the order **  
