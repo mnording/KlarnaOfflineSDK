@@ -30,17 +30,31 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         public OfflineOrder(Klarna.Entities.Cart cart, Entities.MerchantConfig config, string terminal, string phonenumber) : base(cart, config)
         {
-            Regex r = new Regex(@"^([+]46)\s*(7[0236])\s*(\d{4})\s*(\d{3})$", RegexOptions.IgnoreCase);
-            if(!r.IsMatch(phonenumber))
-            {
-                throw new ArgumentException("Phone number incorrect");
-            }
+            
             this.phone = phonenumber;
             this.status = Status.NotSent;
             this.cart = cart;
             this.config = config;
             terminalId = terminal;
-            
+
+            verifyPhoneForCountry();
+        }
+        private void verifyPhoneForCountry()
+        {
+            Regex r = new Regex("");
+            if (config.Country == "SE")
+            {
+                r = new Regex(@"^([+]46)\s*(7[0236])\s*(\d{4})\s*(\d{3})$", RegexOptions.IgnoreCase);
+            }
+            else
+            {
+                r = new Regex("xxx");
+            }
+
+            if (!r.IsMatch(phone))
+            {
+                throw new ArgumentException("Phone number incorrect");
+            }
         }
         /// <summary>
         /// Initiating a new Klarna Offline Order 
@@ -79,7 +93,7 @@ namespace Klarna.Offline
         }
         private void sendOrder()
         {
-            WebRequest request = WebRequest.Create("https://buy.playground.klarna.com/v1/"+config.MerchantId+"/orders");
+            WebRequest request = WebRequest.Create(getBaseUrl() + "/v1/" + config.MerchantId+"/orders");
             request.Method = "POST";
             JsonSerializer _jsonWriter = new JsonSerializer
             {
@@ -157,7 +171,7 @@ namespace Klarna.Offline
             {
                 throw new Exception("Cannot cancel an order that has not been created");
             }
-            WebRequest request = WebRequest.Create("https://buy.playground.klarna.com/v1/" + config.MerchantId + "/orders"+this.klarnaId+"/cancel");
+            WebRequest request = WebRequest.Create(getBaseUrl()+"/v1/" + config.MerchantId + "/orders"+this.klarnaId+"/cancel");
             request.Method = "POST";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             if (response.StatusCode != HttpStatusCode.NoContent)
@@ -206,5 +220,13 @@ namespace Klarna.Offline
             return status;
         }
         public Uri GetStatusUrl() { return statusUrl; }
+        private string getBaseUrl()
+        {
+            if(config.Enviournment == MerchantConfig.Server.Live)
+            {
+                return "https://buy.klarna.com";
+            }
+            return "https://buy.playground.klarna.com";
+        }
     }
 }

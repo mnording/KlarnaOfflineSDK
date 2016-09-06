@@ -8,7 +8,7 @@ The full API specs are avaliable at apiary -> http://docs.klarnaoffline.apiary.i
 
 Firstly you create a config of the current culture, your currency, country, shared secret and store ID.
 ```c#
-MerchantConfig config =MerchantConfig(CultureInfo.CurrentCulture, Currency.SEK, Country.SE, "sDOWW9d9oGZZ4bw", "7262");
+MerchantConfig config =MerchantConfig(CultureInfo.CurrentCulture, Currency.SEK, Country.SE, "YOURSharedSECRET", "MERCHANT_ID");
 ```
 You then create a cart, and populate it with items
 ```c#

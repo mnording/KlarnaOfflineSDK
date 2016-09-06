@@ -17,6 +17,7 @@ namespace Klarna.Offline.Entities
         string postbackUrl;
         string merchantId;
         string sharedSecret;
+        Server server;
         /// <summary>
         /// 
         /// </summary>
@@ -25,13 +26,22 @@ namespace Klarna.Offline.Entities
         /// <param name="country">2 letter country code ISO 3166-1 alpha-2</param>
         /// <param name="sharedSecret">The sharedsecret between you and Klarna</param>
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
-        public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId)
+        public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId,Server server)
         {
+            if(country != "SE")
+            {
+                throw new ArgumentException("Country not supported");
+            }
+            if (currency != "SEK")
+            {
+                throw new ArgumentException("Currency not supported");
+            }
             this.locale = locale.Name;
             purchaseCountry = country;
             purchaseCurrency = currency;
             this.merchantId = merchantId;
             this.sharedSecret = sharedSecret;
+            this.server = server;
         }
         public string Currency
         {
@@ -57,6 +67,10 @@ namespace Klarna.Offline.Entities
         {
             get { return merchantId; }
         }
-        
+        public enum Server {  Test,Live }
+        public Server Enviournment
+        {
+            get { return server; }
+        }
     }
 }
