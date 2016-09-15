@@ -21,24 +21,6 @@ namespace Klarna.Offline
         string klarnaId;
         Uri statusUrl;
         string terminalId;
-        /// <summary>
-        ///  Initiating a new Klarna Offline Order 
-        /// </summary>
-        /// <param name="cart">The cart for the order</param>
-        /// <param name="config">The merchant config to be used</param>
-        /// <param name="terminal">What terminal is the purchase from?</param>
-        /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, Entities.MerchantConfig config, string terminal, string phonenumber) : base(cart, config)
-        {
-            
-            this.phone = phonenumber;
-            this.status = Status.NotSent;
-            this.cart = cart;
-            this.config = config;
-            terminalId = terminal;
-
-            verifyPhoneForCountry();
-        }
         private void verifyPhoneForCountry()
         {
             Regex r = new Regex("");
@@ -64,8 +46,15 @@ namespace Klarna.Offline
         /// <param name="terminal">What terminal is the purchase from?</param>
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference) : this(cart, config,terminal, phonenumber)
+        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference) : base(cart, config)
         {
+            this.phone = phonenumber;
+            this.status = Status.NotSent;
+            this.cart = cart;
+            this.config = config;
+            terminalId = terminal;
+
+            verifyPhoneForCountry();
             this.merchantReference = merchantReference;
            
         }
@@ -78,9 +67,8 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri) : this(cart, config, terminal, phonenumber)
+        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri) : this(cart, config, terminal, phonenumber, merchantReference)
         {
-            this.merchantReference = merchantReference;
             this.postbackUri = postbackUri;
           
         }
