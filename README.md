@@ -4,6 +4,12 @@
 
 The full API specs are avaliable at apiary -> http://docs.klarnaoffline.apiary.io/
 
+## Installing the SDK   
+
+```c#
+Install-Package Mnording.Klarna.Offline
+```
+
 ## Setting up the cart and config
 
 Firstly you create a config of the current culture, your currency, country, shared secret and store ID.
