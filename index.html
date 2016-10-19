@@ -17,7 +17,7 @@
         $('#main_content').headsmart()
       })
     </script>
-    <title>Klarnaofflinesdk by mnording</title>
+    <title>Klarna Instore SDK by mnording</title>
   </head>
 
   <body>
@@ -27,8 +27,8 @@
       <header>
         <span class="ribbon-outer">
           <span class="ribbon-inner">
-            <h1>Klarnaofflinesdk</h1>
-            <h2></h2>
+            <h1>Klarna Instore SDK</h1>
+            <h2>Available in C# and PHP</h2>
           </span>
           <span class="left-tail"></span>
           <span class="right-tail"></span>
@@ -47,82 +47,12 @@
 
       <section id="main_content">
         <h1>
-<a id="klarna-offline-sdk" class="anchor" href="#klarna-offline-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Klarna Offline SDK</h1>
+<a id="klarna-instore-sdk" class="anchor" href="#klarna-instore-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Klarna Instore SDK</h1>
 
-<p><strong>Library that integrates and utilizes the Klarna offline API</strong></p>
+<p><strong>Library that integrates and utilizes the Klarna instore API</strong></p>
 
-<p>The full API specs are avaliable at apiary -&gt; <a href="http://docs.klarnaoffline.apiary.io/">http://docs.klarnaoffline.apiary.io/</a></p>
-
-<h2>
-<a id="installing-the-sdk" class="anchor" href="#installing-the-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing the SDK</h2>
-
-<div class="highlight highlight-source-cs"><pre>Install-Package Mnording.Klarna.Offline</pre></div>
-
-<h2>
-<a id="setting-up-the-cart-and-config" class="anchor" href="#setting-up-the-cart-and-config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up the cart and config</h2>
-
-<p>Firstly you create a config of the current culture, your currency, country, shared secret and store ID.</p>
-
-<div class="highlight highlight-source-cs"><pre>MerchantConfig config = MerchantConfig(CultureInfo.CurrentCulture, Currency.SEK, Country.SE, <span class="pl-s"><span class="pl-pds">"</span>YOURSharedSECRET<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MERCHANT_ID<span class="pl-pds">"</span></span>);</pre></div>
-
-<p>To recieve your merchant ID and shared secret for your integration you will need to reach out to Klarna.  </p>
-
-<p>You then create a cart, and populate it with items</p>
-
-<div class="highlight highlight-source-cs"><pre>Cart cart = <span class="pl-k">new</span> Cart();  
-cart.addProduct(<span class="pl-k">new</span> CartRow(<span class="pl-s"><span class="pl-pds">"</span>Prod1234<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>New Shoes for you<span class="pl-pds">"</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">10000</span>, <span class="pl-c1">25</span>));  
-cart.addProduct(<span class="pl-k">new</span> CartRow(<span class="pl-s"><span class="pl-pds">"</span>Prod1233<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>New purple for you<span class="pl-pds">"</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">10000</span>, <span class="pl-c1">25</span>));</pre></div>
-
-<p>You are also able to define discounts for the cart.</p>
-
-<div class="highlight highlight-source-cs"><pre>cart.addDiscount(<span class="pl-k">new</span> CartRow(<span class="pl-s"><span class="pl-pds">"</span>discount-1<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Summer sales<span class="pl-pds">"</span></span>, <span class="pl-c1">1</span>, -<span class="pl-c1">1000</span>,<span class="pl-c1">25</span>));</pre></div>
-
-<p><em>Note:</em> Prices are entered with amount of cents. Meaning a product that costs 10 SEK, you must enter 1000.</p>
-
-<h2>
-<a id="creating-the-order" class="anchor" href="#creating-the-order" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating the order</h2>
-
-<p>First you send in the cart and config and an optional push url    </p>
-
-<p><strong>Use polling method</strong><br>
-By only starting the order, you will receive a status url hosted by klarna that will communicate the order details once the customer has completed the purchase.</p>
-
-<div class="highlight highlight-source-cs"><pre>OfflineOrder offlineOrder = <span class="pl-k">new</span> OfflineOrder(cart, config, <span class="pl-s"><span class="pl-pds">"</span>terminal<span class="pl-pds">"</span></span>, phone, <span class="pl-s"><span class="pl-pds">"</span>Merchant_OrderReference<span class="pl-pds">"</span></span>);</pre></div>
-
-<p><strong>Use push url method</strong> 
-If you define a status url, then order-data will be pushed to that url when customer has completed the purchase.</p>
-
-<div class="highlight highlight-source-cs"><pre>OfflineOrder offlineOrder = <span class="pl-k">new</span> OfflineOrder(cart, config, <span class="pl-s"><span class="pl-pds">"</span>terminal<span class="pl-pds">"</span></span>, phone, <span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>, <span class="pl-k">new</span> Uri(<span class="pl-s"><span class="pl-pds">"</span>https://URLThatShouldReceiveOrderInformation.com<span class="pl-pds">"</span></span>));</pre></div>
-
-<p><strong>Create the order</strong><br>
-The create call will create the actual KCO session and send out the SMS to the consumer</p>
-
-<div class="highlight highlight-source-cs"><pre>offlineOrder.Create();</pre></div>
-
-<p>If you did not define your own status URL, Klarna will create one for you that you will use for polling the result of the transaction</p>
-
-<p><strong>Cancel ongoing order</strong> </p>
-
-<div class="highlight highlight-source-cs"><pre>offlineOrder.Cancel();</pre></div>
-
-<p>Note: Order must have been created before you can cancel it.</p>
-
-<h2>
-<a id="reading-the-customer-details" class="anchor" href="#reading-the-customer-details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reading the customer details</h2>
-
-<p><strong>Using polling method:</strong><br>
-If you wanted Klarna to create a status url for you, you can use the url that is created on the order, to poll for information.</p>
-
-<div class="highlight highlight-source-cs"><pre><span class="pl-k">string</span> url = offlineOrder.GetStatusUrl();</pre></div>
-
-<p>This url will timeout every 60 seconds and you will need to re-trigger it to check as long as the customer has not completed the purchase</p>
-
-<div class="highlight highlight-source-cs"><pre>OrderDetails details = offlineOrder.pollData(url);</pre></div>
-
-<p><strong>Using status url method</strong><br>
-If you defined your own statusurl, Klarna will post data to that url. To read all order-data you can use the JsonConverter.</p>
-
-<div class="highlight highlight-source-cs"><pre>OrderDetails details =JsonConverter.GetOrderFromString(jsonString);</pre></div>
+<p>The library support creation of in store orders as well as cancellations of them.
+The library is available in C# and PHP </p>
       </section>
 
       <footer>
