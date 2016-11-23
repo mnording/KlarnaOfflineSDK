@@ -243,3 +243,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Offline/Offline.nuspec
+/Offline/nuget.exe

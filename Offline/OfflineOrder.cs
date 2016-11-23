@@ -11,20 +11,23 @@ namespace Klarna.Offline
 {
     public class OfflineOrder : Klarna.Entities.Order
     {
-        string merchantReference;
-        string phone;
+        string _merchantReference;
+
         public enum Status { NotSent,Sent,Pending,Polling,Complete}
-        Status status;
-        MerchantConfig config;
-        Klarna.Entities.Cart cart;
-        Uri postbackUri;
-        string klarnaId;
-        Uri statusUrl;
-        string terminalId;
+        Status _status;
+        MerchantConfig _config;
+        Klarna.Entities.Cart _cart;
+        Uri _postbackUri;
+        string _klarnaId;
+        Uri _statusUrl;
+        public string sms_sender_id;
+        public string sms_text;
+        string _terminalId;
+
         private void verifyPhoneForCountry()
         {
             Regex r = new Regex("");
-            if (config.Country == "SE")
+            if (_config.Country == "SE")
             {
                 r = new Regex(@"^([+]46)\s*(7[0236])\s*(\d{4})\s*(\d{3})$", RegexOptions.IgnoreCase);
             }
@@ -33,7 +36,7 @@ namespace Klarna.Offline
                 r = new Regex("xxx");
             }
 
-            if (!r.IsMatch(phone))
+            if (!r.IsMatch(mobile_no))
             {
                 throw new ArgumentException("Phone number incorrect");
             }
@@ -48,14 +51,14 @@ namespace Klarna.Offline
         /// <param name="merchantReference">The store-reference for this order</param>
         public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference) : base(cart, config)
         {
-            this.phone = phonenumber;
-            this.status = Status.NotSent;
-            this.cart = cart;
-            this.config = config;
-            terminalId = terminal;
+            mobile_no = phonenumber;
+            _status = Status.NotSent;
+            _cart = cart;
+            _config = config;
+            _terminalId = terminal;
 
             verifyPhoneForCountry();
-            this.merchantReference = merchantReference;
+            _merchantReference = merchantReference;
            
         }
         /// <summary>
@@ -69,7 +72,7 @@ namespace Klarna.Offline
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
         public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri) : this(cart, config, terminal, phonenumber, merchantReference)
         {
-            this.postbackUri = postbackUri;
+            _postbackUri = postbackUri;
           
         }
         /// <summary>
@@ -77,40 +80,39 @@ namespace Klarna.Offline
         /// </summary>
         public void Create()
         {
-            sendOrder();
+            SendOrder();
         }
-        private void sendOrder()
+        private void SendOrder()
         {
-            WebRequest request = WebRequest.Create(getBaseUrl() + "/v1/" + config.MerchantId+"/orders");
+            WebRequest request = WebRequest.Create(GetBaseUrl() + "/v1/" + _config.MerchantId+"/orders");
             request.Method = "POST";
-            JsonSerializer _jsonWriter = new JsonSerializer
+            JsonSerializer jsonWriter = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore
             };
-            JObject ob = JObject.FromObject(this, _jsonWriter);
+            JObject ob = JObject.FromObject(this, jsonWriter);
            // JObject jObject = JObject.Parse("{  \n   \"mobile_no\":\"+46700012794\",\n   \"merchant_reference1\":\"1\",\n   \"purchase_currency\":\"sek\",\n   \"purchase_country\":\"se\",\n   \"locale\":\"sv-se\",\n   \"postback_uri\":\"http://requestbin.herokuapp.com/tbh5v5tb\",\n   \"order_lines\":[  \n      {  \n         \"unit_price\":10000,\n         \"quantity\":1,\n         \"reference\":\"string\",\n         \"tax_rate\":2500,\n         \"name\":\"string\"\n      }\n   ]\n}");
             var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(config.MerchantId, config.SharedSecret);
+            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "Basic " + digest);
-            var test = ob.ToString();
-          
+
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(ob.ToString());
             }
             WebResponse response = request.GetResponse();
-            status = Status.Sent;
+            _status = Status.Sent;
             using (var reader = new StreamReader(response.GetResponseStream()))
             {
                 string result = reader.ReadToEnd(); // do something fun...
                 JObject orderResponse = JObject.Parse(result);
-                klarnaId = orderResponse["id"].ToString();
-                status = Status.Pending;
+                _klarnaId = orderResponse["id"].ToString();
+                _status = Status.Pending;
                 if(orderResponse["status_uri"] != null)
                 {
-                    statusUrl = new Uri(orderResponse["status_uri"].ToString());
-                    status = Status.Polling;
+                    _statusUrl = new Uri(orderResponse["status_uri"].ToString());
+                    _status = Status.Polling;
                 }
             }
            
@@ -123,8 +125,8 @@ namespace Klarna.Offline
         public OrderDetails pollData(Uri url)
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(config.MerchantId, config.SharedSecret);
-            WebRequest request = WebRequest.Create(statusUrl);
+            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
+            WebRequest request = WebRequest.Create(_statusUrl);
             request.Method = "GET";
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "Basic " + digest);
@@ -153,11 +155,11 @@ namespace Klarna.Offline
         /// </summary>
         public void Cancel()
         {
-            if(klarnaId == String.Empty)
+            if(_klarnaId == String.Empty)
             {
                 throw new Exception("Cannot cancel an order that has not been created");
             }
-            WebRequest request = WebRequest.Create(getBaseUrl()+"/v1/" + config.MerchantId + "/orders"+this.klarnaId+"/cancel");
+            WebRequest request = WebRequest.Create(GetBaseUrl()+"/v1/" + _config.MerchantId + "/orders"+_klarnaId+"/cancel");
             request.Method = "POST";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             if (response.StatusCode != HttpStatusCode.NoContent)
@@ -165,50 +167,60 @@ namespace Klarna.Offline
                 throw new Exception("Something went wrong with the cancellation");
             }
         }
-        
-        public string mobile_no
+        public void SetTextMessage(string text)
         {
-            get { return phone; }
+           if(text.IndexOf("{URL}",StringComparison.OrdinalIgnoreCase)>=0)
+            {
+                var index = text.IndexOf("{URL}", StringComparison.OrdinalIgnoreCase);
+                var firstpart = text.Substring(0, index);
+                var secondpart = text.Substring(index+5);
+                text = firstpart+" {url} "+secondpart;
+            }
+            if(text.Contains("{url}") == false)
+            {
+                text = text + " {url}";
+            }
+            sms_text = text;
         }
+        public void SetSender(string sender)
+        {
+            sms_sender_id = sender;
+        }
+        public string mobile_no { get; }
+
         public string merchant_reference1
         {
-            get { return this.merchantReference; }
+            get { return _merchantReference; }
         }
-        public string purchase_currency
-        {
-            get { return config.Currency.ToLower(); }
-        }
+        public string purchase_currency => _config.Currency.ToLower();
+
         public string postback_uri
         {
             get
             {
-                if (postbackUri != null)
-                {
-                    return postbackUri.AbsoluteUri;
-                }
-                return null;
+                return _postbackUri != null ? _postbackUri.AbsoluteUri : null;
             }
         }
         public string purchase_country
         {
-            get { return config.Country.ToLower(); }
+            get { return _config.Country.ToLower(); }
         }
         public string locale
         {
-            get { return config.Locale.ToLower(); }
+            get { return _config.Locale.ToLower(); }
         }
         public List<Klarna.Entities.CartRow> order_lines
         {
-            get { return cart.OrderLines; }
+            get { return _cart.OrderLines; }
         }
         public Status GetStatus()
         {
-            return status;
+            return _status;
         }
-        public Uri GetStatusUrl() { return statusUrl; }
-        private string getBaseUrl()
+        public Uri GetStatusUrl() { return _statusUrl; }
+        private string GetBaseUrl()
         {
-            if(config.Enviournment == MerchantConfig.Server.Live)
+            if(_config.Enviournment == MerchantConfig.Server.Live)
             {
                 return "https://buy.klarna.com";
             }
