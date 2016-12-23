@@ -91,7 +91,7 @@ namespace Klarna.Offline
                 NullValueHandling = NullValueHandling.Ignore
             };
             JObject ob = JObject.FromObject(this, jsonWriter);
-           // JObject jObject = JObject.Parse("{  \n   \"mobile_no\":\"+46700012794\",\n   \"merchant_reference1\":\"1\",\n   \"purchase_currency\":\"sek\",\n   \"purchase_country\":\"se\",\n   \"locale\":\"sv-se\",\n   \"postback_uri\":\"http://requestbin.herokuapp.com/tbh5v5tb\",\n   \"order_lines\":[  \n      {  \n         \"unit_price\":10000,\n         \"quantity\":1,\n         \"reference\":\"string\",\n         \"tax_rate\":2500,\n         \"name\":\"string\"\n      }\n   ]\n}");
+          
             var digestCreator = new Klarna.Helpers.DigestCreator();
             var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
             request.ContentType = "application/json";
@@ -159,8 +159,12 @@ namespace Klarna.Offline
             {
                 throw new Exception("Cannot cancel an order that has not been created");
             }
-            WebRequest request = WebRequest.Create(GetBaseUrl()+"/v1/" + _config.MerchantId + "/orders"+_klarnaId+"/cancel");
+            var digestCreator = new Klarna.Helpers.DigestCreator();
+            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
+            WebRequest request = WebRequest.Create(GetBaseUrl()+"/v1/" + _config.MerchantId + "/orders/"+_klarnaId+"/cancel");
             request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Headers.Add("Authorization", "Basic " + digest);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
