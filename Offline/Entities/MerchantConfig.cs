@@ -26,20 +26,39 @@ namespace Klarna.Offline.Entities
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
         public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId,Server server)
         {
-            if(country != "SE")
-            {
-                throw new ArgumentException("Country not supported");
-            }
-            if (currency != "SEK")
-            {
-                throw new ArgumentException("Currency not supported");
-            }
+           verifyCountries(currency,country);
             this.locale = locale.Name;
             purchaseCountry = country;
             purchaseCurrency = currency;
             this.merchantId = merchantId;
             this.sharedSecret = sharedSecret;
             this.server = server;
+        }
+
+        private void verifyCountries(string currency, string country)
+        {
+            if (country != "SE" && country != "NO" && country != "FI")
+            {
+                throw new ArgumentException("Country not supported");
+            }
+            if (currency != "SEK" && currency != "EUR" && currency != "NOK")
+            {
+                throw new ArgumentException("Currency not supported");
+            }
+            if (country == "SE" && currency != "SEK")
+            {
+                throw new ArgumentException("Currency/Country missmatch");
+            }
+            if (country == "FI" && currency != "EUR")
+            {
+                throw new ArgumentException("Currency/Country missmatch");
+            }
+             if (country == "NO" && currency != "NOK")
+            {
+                throw new ArgumentException("Currency/Country missmatch");
+            }
+
+
         }
         public string Currency
         {

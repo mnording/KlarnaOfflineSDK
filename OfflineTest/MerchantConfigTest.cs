@@ -20,6 +20,18 @@ namespace OfflineTest
             Assert.AreNotEqual(null, t);
         }
         [TestMethod]
+        public void MustBeAbleToInitWithFinland()
+        {
+            var t = new MerchantConfig(new System.Globalization.CultureInfo(1), "EUR", "FI", "test", "test", MerchantConfig.Server.Live);
+            Assert.AreNotEqual(null, t);
+        }
+        [TestMethod]
+        public void MustBeAbleToInitWithNorway()
+        {
+            var t = new MerchantConfig(new System.Globalization.CultureInfo(1), "NOK", "NO", "test", "test", MerchantConfig.Server.Live);
+            Assert.AreNotEqual(null, t);
+        }
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void MustNotBeAbleToInitWrongCurrency()
         {

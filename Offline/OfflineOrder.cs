@@ -27,7 +27,7 @@ namespace Klarna.Offline
         private void verifyPhoneForCountry()
         {
             Regex r = new Regex("");
-            if (_config.Country == "SE")
+            if (_config.Country == "SE" || _config.Country == "FI"|| _config.Country == "NO")
             {
                 r = new Regex(@"^([+]46)\s*(7[0236])\s*(\d{4})\s*(\d{3})$", RegexOptions.IgnoreCase);
             }
