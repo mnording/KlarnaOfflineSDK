@@ -6,6 +6,7 @@
         public string message_code;
         public string message;
         public string invoice_id;
+        public string reservation_id;
         public string invoice_pdf;
         public Customer customer;
     }

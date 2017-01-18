@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
@@ -23,7 +24,7 @@ namespace Klarna.Offline
         public string sms_sender_id;
         public string sms_text;
         string _terminalId;
-
+        public bool auto_activate;
         private void verifyPhoneForCountry()
         {
             Regex r = new Regex("");
@@ -49,14 +50,14 @@ namespace Klarna.Offline
         /// <param name="terminal">What terminal is the purchase from?</param>
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference) : base(cart, config)
+        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate=false) : base(cart, config)
         {
             mobile_no = phonenumber;
             _status = Status.NotSent;
             _cart = cart;
             _config = config;
             _terminalId = terminal;
-
+            auto_activate = autoActivate;
             verifyPhoneForCountry();
             _merchantReference = merchantReference;
            
@@ -70,7 +71,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri) : this(cart, config, terminal, phonenumber, merchantReference)
+        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri, bool autoActivate = false) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
         {
             _postbackUri = postbackUri;
           

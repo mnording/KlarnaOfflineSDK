@@ -10,9 +10,9 @@ namespace Klarna.Offline.Helpers
         {
             var jsreader = new JsonTextReader(new StringReader(input));
             var details = new JsonSerializer().Deserialize<OrderDetails>(jsreader);
-            if(details.invoice_id == null)
+            if(details.invoice_id == null && details.reservation_id == null)
             {
-                throw new InvalidDataException("Missing invoice ID");
+                throw new InvalidDataException("Missing invoice/reservation ID");
             }
             if(details.customer == null)
             {
