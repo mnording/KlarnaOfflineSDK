@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
-using System.Diagnostics.Eventing.Reader;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
@@ -49,6 +48,7 @@ namespace Klarna.Offline
                 throw new ArgumentException("Phone number incorrect");
             }
         }
+
         /// <summary>
         /// Initiating a new Klarna Offline Order 
         /// </summary>
@@ -57,6 +57,7 @@ namespace Klarna.Offline
         /// <param name="terminal">What terminal is the purchase from?</param>
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
+        /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
         public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate=true) : base(cart, config)
         {
             mobile_no = phonenumber;
@@ -69,6 +70,7 @@ namespace Klarna.Offline
             _merchantReference = merchantReference;
            
         }
+
         /// <summary>
         /// Initiating a new Klarna Offline Order 
         /// </summary>
@@ -78,6 +80,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
+        /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
         public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
         {
             _postbackUri = postbackUri;
@@ -129,7 +132,7 @@ namespace Klarna.Offline
         /// Will fetch data from Klarna endpoint to find customer information
         /// </summary>
         /// <param name="url">Url to poll</param>
-        /// <returns>OrderDtails Object if purchase is complete</returns>
+        /// <returns>OrderDetails Object if purchase is complete</returns>
         public OrderDetails pollData(Uri url)
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
@@ -232,7 +235,7 @@ namespace Klarna.Offline
         public Uri GetStatusUrl() { return _statusUrl; }
         private string GetBaseUrl()
         {
-            if(_config.Enviournment == MerchantConfig.Server.Live)
+            if(_config.Environment == MerchantConfig.Server.Live)
             {
                 return "https://buy.klarna.com";
             }

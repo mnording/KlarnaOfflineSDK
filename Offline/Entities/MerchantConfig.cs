@@ -1,10 +1,5 @@
-﻿using Klarna.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Klarna.Offline.Entities
 {
@@ -16,6 +11,7 @@ namespace Klarna.Offline.Entities
         string merchantId;
         string sharedSecret;
         Server server;
+
         /// <summary>
         /// 
         /// </summary>
@@ -24,9 +20,10 @@ namespace Klarna.Offline.Entities
         /// <param name="country">2 letter country code ISO 3166-1 alpha-2</param>
         /// <param name="sharedSecret">The sharedsecret between you and Klarna</param>
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
+        /// <param name="server">What server is being targeted?</param>
         public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId,Server server)
         {
-           verifyCountries(currency,country);
+           VerifyCountries(currency,country);
             this.locale = locale.Name;
             purchaseCountry = country;
             purchaseCurrency = currency;
@@ -35,8 +32,10 @@ namespace Klarna.Offline.Entities
             this.server = server;
         }
 
-        private void verifyCountries(string currency, string country)
+        private void VerifyCountries(string currency, string country)
         {
+            if (currency == null) throw new ArgumentNullException(nameof(currency));
+            if (country == null) throw new ArgumentNullException(nameof(country));
             if (country != "SE" && country != "NO" && country != "FI")
             {
                 throw new ArgumentException("Country not supported");

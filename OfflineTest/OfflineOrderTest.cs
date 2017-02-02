@@ -15,34 +15,38 @@ namespace OfflineTest
         public void MustValidateSwedishPhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46700024576",
                 "ref");
+            Assert.IsNotNull(t);
         }
 
         [TestMethod]
         public void MustValidateNorwegianPhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+4790000000",
                 "ref");
+            Assert.IsNotNull(t);
             t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+4740000000",
                 "ref");
+            Assert.IsNotNull(t);
             t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+4759000000",
                 "ref");
+            Assert.IsNotNull(t);
 
         }
 
@@ -50,37 +54,41 @@ namespace OfflineTest
         public void MustValidateFinnishPhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+358401234567",
                 "ref");
+            Assert.IsNotNull(t);
             t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+358501234",
                 "ref");
+            Assert.IsNotNull(t);
             t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+35845733654578",
                 "ref");
+            Assert.IsNotNull(t);
             t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+35850457894",
                 "ref");
+            Assert.IsNotNull(t);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void MustThrowErrorOnToLongFIPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+            var offlineOrder = new OfflineOrder(new Cart(),
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+3584012345673332231312312",
@@ -91,7 +99,7 @@ namespace OfflineTest
         public void MustThrowErrorOnToShortFIPhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+35840123",
@@ -103,7 +111,7 @@ namespace OfflineTest
         public void MustThrowErrorOnWrongSEhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+4670002457622",
