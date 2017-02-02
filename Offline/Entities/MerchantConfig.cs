@@ -81,7 +81,7 @@ namespace Klarna.Offline.Entities
             get { return merchantId; }
         }
         public enum Server {  Test,Live }
-        public Server Enviournment
+        public Server Environment
         {
             get { return server; }
         }
