@@ -139,16 +139,10 @@ namespace Klarna.Offline
         /// <returns>OrderDetails Object if purchase is complete</returns>
         public OrderDetails pollData(Uri url)
         {
-            var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
-            WebRequest request = WebRequest.Create(_statusUrl);
             _status = Status.Polling;
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "Basic " + digest);
             try
             {
-                WebResponse response = request.GetResponse();
+                WebResponse response = SendRequest(_statusUrl, "GET");
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
                     string result = reader.ReadToEnd(); // do something fun...
@@ -167,6 +161,18 @@ namespace Klarna.Offline
            
            
         }
+
+        private HttpWebResponse SendRequest(Uri url, string method)
+        {
+            var digestCreator = new Klarna.Helpers.DigestCreator();
+            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
+            WebRequest request = WebRequest.Create(url);
+            request.Method = method;
+            request.ContentType = "application/json";
+            request.Headers.Add("Authorization", "Basic " + digest);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            return response;
+        }
         /// <summary>
         /// Cancels the order
         /// </summary>
@@ -176,13 +182,9 @@ namespace Klarna.Offline
             {
                 throw new Exception("Cannot cancel an order that has not been created");
             }
-            var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
-            WebRequest request = WebRequest.Create(GetBaseUrl()+"/v1/" + _config.MerchantId + "/orders/"+_klarnaId+"/cancel");
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "Basic " + digest);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response =
+                SendRequest(new Uri(GetBaseUrl() + "/v1/" + _config.MerchantId + "/orders/" + _klarnaId + "/cancel"),
+                    "POST");
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
                 throw new Exception("Something went wrong with the cancellation");
