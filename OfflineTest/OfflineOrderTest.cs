@@ -129,5 +129,30 @@ namespace OfflineTest
                 "+47900000000",
                 "ref");
         }
+
+        [TestMethod]
+        public void PostBackUrlHasToBeHTTPS()
+        {
+            OfflineOrder t = new OfflineOrder(new Cart(),
+                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testid", "testid", MerchantConfig.Server.Test),
+                "test",
+                "+46729922222",
+                "ref",new Uri("https://www.test.com"));
+            Assert.IsNotNull(t);
+            
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void PostBackUrlCannotBeHTTP()
+        {
+            OfflineOrder t = new OfflineOrder(new Cart(),
+                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testid", "testid", MerchantConfig.Server.Test),
+                "test",
+                "+46729922222",
+                "ref", new Uri("http://www.test.com"));
+        }
     }
 }

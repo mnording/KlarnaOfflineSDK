@@ -83,6 +83,10 @@ namespace Klarna.Offline
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
         public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference,Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
         {
+            if (postbackUri.Scheme != "https")
+            {
+                throw new ArgumentException("Postback URL has to be HTTPS");
+            }
             _postbackUri = postbackUri;
           
         }
@@ -138,6 +142,7 @@ namespace Klarna.Offline
             var digestCreator = new Klarna.Helpers.DigestCreator();
             var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
             WebRequest request = WebRequest.Create(_statusUrl);
+            _status = Status.Polling;
             request.Method = "GET";
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "Basic " + digest);
@@ -150,6 +155,7 @@ namespace Klarna.Offline
                     Helpers.JsonConverter.GetOrderFromString(result);
                     var jsreader = new JsonTextReader(new StringReader(result));
                     var details=  new JsonSerializer().Deserialize<OrderDetails>(jsreader);
+                    _status = Status.Complete;
                     return details;
                    
                 }
