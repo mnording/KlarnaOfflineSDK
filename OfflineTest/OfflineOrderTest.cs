@@ -84,7 +84,7 @@ namespace OfflineTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
         public void MustThrowErrorOnToLongFIPhone()
         {
             var offlineOrder = new OfflineOrder(new Cart(),
@@ -103,19 +103,19 @@ namespace OfflineTest
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
-                "+35840123",
+                "+35842",
                 "ref");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
         public void MustThrowErrorOnWrongSEhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
-                "+4670002457622",
+                "+46700024576223423422",
                 "ref");
         }
 
@@ -127,7 +127,7 @@ namespace OfflineTest
                 new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
-                "+47900000000",
+                "+439000000000000",
                 "ref");
         }
 
