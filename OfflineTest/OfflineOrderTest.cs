@@ -94,6 +94,7 @@ namespace OfflineTest
                 "+3584012345673332231312312",
                 "ref");
         }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void MustThrowErrorOnToShortFIPhone()
@@ -138,9 +139,9 @@ namespace OfflineTest
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
-                "ref",new Uri("https://www.test.com"));
+                "ref", new Uri("https://www.test.com"));
             Assert.IsNotNull(t);
-            
+
         }
 
         [TestMethod]
@@ -153,6 +154,46 @@ namespace OfflineTest
                 "test",
                 "+46729922222",
                 "ref", new Uri("http://www.test.com"));
+        }
+
+        [TestMethod]
+        public void CanSetOwnText()
+        {
+            OfflineOrder t = new OfflineOrder(new Cart(),
+                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testid", "testid", MerchantConfig.Server.Test),
+                "test",
+                "+46729922222",
+                "ref", new Uri("https://www.test.com"));
+            var smsText = "THis is my own URL with a {url} inside of it";
+            t.SetTextMessage(smsText);
+            Assert.AreEqual(smsText,t.sms_text);
+        }
+        [TestMethod]
+        public void AutoAddingUrlPlaceholder()
+        {
+            OfflineOrder t = new OfflineOrder(new Cart(),
+                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testid", "testid", MerchantConfig.Server.Test),
+                "test",
+                "+46729922222",
+                "ref", new Uri("https://www.test.com"));
+            var smsText = "This is my own text";
+            t.SetTextMessage(smsText);
+            Assert.AreEqual(smsText+" {url}", t.sms_text);
+        }
+        [TestMethod]
+        public void CorrectingWrongPlaceholder()
+        {
+            OfflineOrder t = new OfflineOrder(new Cart(),
+                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testid", "testid", MerchantConfig.Server.Test),
+                "test",
+                "+46729922222",
+                "ref", new Uri("https://www.test.com"));
+            var smsText = "This is my own text{uRl}";
+            t.SetTextMessage(smsText);
+            Assert.AreEqual("This is my own text{url}", t.sms_text);
         }
     }
 }

@@ -99,24 +99,12 @@ namespace Klarna.Offline
         }
         private void SendOrder()
         {
-            WebRequest request = WebRequest.Create(GetBaseUrl() + "/v1/" + _config.MerchantId+"/orders");
-            request.Method = "POST";
             JsonSerializer jsonWriter = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore
             };
             JObject ob = JObject.FromObject(this, jsonWriter);
-          
-            var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "Basic " + digest);
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(ob.ToString());
-            }
-            WebResponse response = request.GetResponse();
+            WebResponse response = SendRequest(new Uri(GetBaseUrl() + "/v1/" + _config.MerchantId + "/orders"), "POST", ob);
             _status = Status.Sent;
             using (var reader = new StreamReader(response.GetResponseStream()))
             {
@@ -162,7 +150,7 @@ namespace Klarna.Offline
            
         }
 
-        private HttpWebResponse SendRequest(Uri url, string method)
+        private HttpWebResponse SendRequest(Uri url, string method,JObject data = null)
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
             var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
@@ -170,6 +158,13 @@ namespace Klarna.Offline
             request.Method = method;
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "Basic " + digest);
+            if (data != null)
+            {
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(data.ToString());
+                }
+            }
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             return response;
         }
@@ -197,7 +192,7 @@ namespace Klarna.Offline
                 var index = text.IndexOf("{URL}", StringComparison.OrdinalIgnoreCase);
                 var firstpart = text.Substring(0, index);
                 var secondpart = text.Substring(index+5);
-                text = firstpart+" {url} "+secondpart;
+                text = firstpart+"{url}"+secondpart;
             }
             if(text.Contains("{url}") == false)
             {
