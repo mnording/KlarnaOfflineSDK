@@ -96,6 +96,7 @@ namespace Klarna.Offline
         public void Create()
         {
             SendOrder();
+            _status = Status.Sent;
         }
         private void SendOrder()
         {
@@ -105,7 +106,7 @@ namespace Klarna.Offline
             };
             JObject ob = JObject.FromObject(this, jsonWriter);
             WebResponse response = SendRequest(new Uri(GetBaseUrl() + "/v1/" + _config.MerchantId + "/orders"), "POST", ob);
-            _status = Status.Sent;
+            
             using (var reader = new StreamReader(response.GetResponseStream()))
             {
                 string result = reader.ReadToEnd(); // do something fun...
@@ -154,9 +155,10 @@ namespace Klarna.Offline
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
             var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
-            WebRequest request = WebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.ContentType = "application/json";
+            request.UserAgent = "Mnording Instore SDK - 2.3.0";
             request.Headers.Add("Authorization", "Basic " + digest);
             if (data != null)
             {
