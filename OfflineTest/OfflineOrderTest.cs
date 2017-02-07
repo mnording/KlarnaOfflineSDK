@@ -167,8 +167,9 @@ namespace OfflineTest
                 "ref", new Uri("https://www.test.com"));
             var smsText = "THis is my own URL with a {url} inside of it";
             t.SetTextMessage(smsText);
-            Assert.AreEqual(smsText,t.sms_text);
+            Assert.AreEqual(smsText, t.sms_text);
         }
+
         [TestMethod]
         public void AutoAddingUrlPlaceholder()
         {
@@ -180,8 +181,9 @@ namespace OfflineTest
                 "ref", new Uri("https://www.test.com"));
             var smsText = "This is my own text";
             t.SetTextMessage(smsText);
-            Assert.AreEqual(smsText+" {url}", t.sms_text);
+            Assert.AreEqual(smsText + " {url}", t.sms_text);
         }
+
         [TestMethod]
         public void CorrectingWrongPlaceholder()
         {
@@ -194,6 +196,14 @@ namespace OfflineTest
             var smsText = "This is my own text{uRl}";
             t.SetTextMessage(smsText);
             Assert.AreEqual("This is my own text{url}", t.sms_text);
+        }
+
+        [TestMethod]
+        public void CanCreateOrderOnID()
+        {
+            OfflineOrder t = new OfflineOrder("04341105793e19059ed14b39622bfaeb09484541",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                    "testShared", "testid", MerchantConfig.Server.Test));
         }
     }
 }

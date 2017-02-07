@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using Klarna.Entities;
 using PhoneNumbers;
+using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace Klarna.Offline
 {
@@ -102,11 +104,24 @@ namespace Klarna.Offline
             _postbackUri = postbackUri;
 
         }
+
+        public OfflineOrder(string orderId,MerchantConfig config):base(new Cart(), config)
+        {
+            _klarnaId = orderId;
+            _config = config;
+            _status = Status.Sent;
+        }
         /// <summary>
         /// Activating the order. Effectively sending the SMS to the customer phone
         /// </summary>
         public void Create()
         {
+            if (_status != Status.NotSent)
+            {
+                throw new Exception("Order already created. Cancel and create a new one");
+               
+            }
+               
             SendOrder();
             _status = Status.Sent;
         }
