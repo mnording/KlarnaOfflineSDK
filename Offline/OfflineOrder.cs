@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.CodeDom;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Klarna.Entities;
@@ -12,14 +13,14 @@ using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace Klarna.Offline
 {
-    public class OfflineOrder : Klarna.Entities.Order
+    public class OfflineOrder : Order
     {
         string _merchantReference;
 
         public enum Status { NotSent, Sent, Pending, Polling, Complete }
         Status _status;
         MerchantConfig _config;
-        Klarna.Entities.Cart _cart;
+        Cart _cart;
         Uri _postbackUri;
         string _klarnaId;
         Uri _statusUrl;
@@ -27,10 +28,9 @@ namespace Klarna.Offline
         public string sms_text;
         string _terminalId;
         public bool auto_activate;
-        private void verifyPhoneForCountry()
+        private void VerifyPhoneForCountry()
         {
             PhoneNumberUtil phoneUtil = PhoneNumberUtil.GetInstance();
-            Regex r = new Regex("");
             if (_config.Country == "SE")
             {
                 var t = phoneUtil.Parse(mobile_no, "SE");
@@ -72,7 +72,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) : base(cart, config)
+        public OfflineOrder(Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) : base(cart, config)
         {
             mobile_no = phonenumber;
             _status = Status.NotSent;
@@ -80,7 +80,7 @@ namespace Klarna.Offline
             _config = config;
             _terminalId = terminal;
             auto_activate = autoActivate;
-            verifyPhoneForCountry();
+            VerifyPhoneForCountry();
             _merchantReference = merchantReference;
 
         }
@@ -95,7 +95,7 @@ namespace Klarna.Offline
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(Klarna.Entities.Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
+        public OfflineOrder(Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
         {
             if (postbackUri.Scheme != "https")
             {
@@ -153,7 +153,7 @@ namespace Klarna.Offline
         /// </summary>
         /// <param name="url">Url to poll</param>
         /// <returns>OrderDetails Object if purchase is complete</returns>
-        public OrderDetails pollData(Uri url)
+        public OrderDetails pollData(Uri url) ///Todo: Update naming in breaking update
         {
             _status = Status.Polling;
             try
@@ -185,7 +185,7 @@ namespace Klarna.Offline
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.ContentType = "application/json";
-            request.UserAgent = "Mnording Instore SDK - 2.3.0";
+            request.UserAgent = "Mnording Instore SDK - 2.5.0";
             request.Headers.Add("Authorization", "Basic " + digest);
             if (data != null)
             {
@@ -256,7 +256,7 @@ namespace Klarna.Offline
         {
             get { return _config.Locale.ToLower(); }
         }
-        public List<Klarna.Entities.CartRow> order_lines
+        public List<CartRow> order_lines
         {
             get { return _cart.OrderLines; }
         }
@@ -272,6 +272,15 @@ namespace Klarna.Offline
                 return "https://buy.klarna.com";
             }
             return "https://buy.playground.klarna.com";
+        }
+
+        public string GetOrderId()
+        {
+            if (_klarnaId == "")
+            {
+                throw new Exception("Order not created yet");
+            }
+            return _klarnaId;
         }
     }
 }

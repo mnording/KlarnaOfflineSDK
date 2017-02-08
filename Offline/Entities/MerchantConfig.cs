@@ -28,9 +28,7 @@ namespace Klarna.Offline.Entities
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="locale">The locale of the purchase</param>
-        /// <param name="currency">The currency of the purchase ISO 4217</param>
-        /// <param name="country">2 letter country code ISO 3166-1 alpha-2</param>
+        /// <param name="culture">The culture of the purchase, will populate currency and country values</param>
         /// <param name="sharedSecret">The sharedsecret between you and Klarna</param>
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
         /// <param name="server">What server is being targeted?</param>

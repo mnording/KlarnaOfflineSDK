@@ -124,7 +124,7 @@ namespace OfflineTest
         public void MustThrowErrorOnWrongNOPhone()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+439000000000000",
@@ -135,7 +135,7 @@ namespace OfflineTest
         public void PostBackUrlHasToBeHTTPS()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
@@ -149,7 +149,7 @@ namespace OfflineTest
         public void PostBackUrlCannotBeHTTP()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
@@ -160,7 +160,7 @@ namespace OfflineTest
         public void CanSetOwnText()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
@@ -173,22 +173,22 @@ namespace OfflineTest
         [TestMethod]
         public void AutoAddingUrlPlaceholder()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+            OfflineOrder offlineOrder = new OfflineOrder(new Cart(),
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
                 "ref", new Uri("https://www.test.com"));
             var smsText = "This is my own text";
-            t.SetTextMessage(smsText);
-            Assert.AreEqual(smsText + " {url}", t.sms_text);
+            offlineOrder.SetTextMessage(smsText);
+            Assert.AreEqual(smsText + " {url}", offlineOrder.sms_text);
         }
 
         [TestMethod]
         public void CorrectingWrongPlaceholder()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
-                new Klarna.Offline.Entities.MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
+                new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
                 "+46729922222",
