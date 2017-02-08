@@ -185,7 +185,7 @@ namespace Klarna.Offline
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.ContentType = "application/json";
-            request.UserAgent = "Mnording Instore SDK - 2.5.0";
+            request.UserAgent = "Mnording Instore SDK - 2.6.0";
             request.Headers.Add("Authorization", "Basic " + digest);
             if (data != null)
             {
