@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Klarna.Offline.Helpers;
 using Klarna.Offline.Entities;
 using System.IO;
@@ -34,7 +33,7 @@ namespace OfflineTest
         [ExpectedException(typeof(InvalidDataException))]
         public void MustNotValidateIncorrectOrderCustomerInformation()
         {
-            OrderDetails t = JsonConverter.GetOrderFromString("{" +
+            JsonConverter.GetOrderFromString("{" +
               "'id': '037f5998a5ed1371c9098542acd6e4c5214dc52a'," +
               "'message_code': 200," +
               "'message': 'Din transaktion är godkänd, du får en faktura från Klarna'," +
@@ -55,7 +54,7 @@ namespace OfflineTest
         [ExpectedException(typeof(InvalidDataException))]
         public void MustNotValidateMissingOrderCustomerInformation()
         {
-            OrderDetails t = JsonConverter.GetOrderFromString("{" +
+            JsonConverter.GetOrderFromString("{" +
               "'id': '037f5998a5ed1371c9098542acd6e4c5214dc52a'," +
               "'message_code': 200," +
               "'message': 'Din transaktion är godkänd, du får en faktura från Klarna'," +
@@ -67,7 +66,7 @@ namespace OfflineTest
         [ExpectedException(typeof(InvalidDataException))]
         public void MustNotValidatemMissingInvoice()
         {
-            OrderDetails t = JsonConverter.GetOrderFromString("{" +
+             JsonConverter.GetOrderFromString("{" +
               "'id': '037f5998a5ed1371c9098542acd6e4c5214dc52a'," +
               "'message_code': 200," +
               "'message': 'Din transaktion är godkänd, du får en faktura från Klarna'," +

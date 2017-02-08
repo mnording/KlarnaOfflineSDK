@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using Klarna.Offline;
-using Klarna.Offline.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Klarna.Entities;
 using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
@@ -85,9 +84,9 @@ namespace OfflineTest
 
         [TestMethod]
         [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
-        public void MustThrowErrorOnToLongFIPhone()
+        public void MustThrowErrorOnToLongFiPhone()
         {
-            var offlineOrder = new OfflineOrder(new Cart(),
+            new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
@@ -97,9 +96,9 @@ namespace OfflineTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void MustThrowErrorOnToShortFIPhone()
+        public void MustThrowErrorOnToShortFiPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
@@ -111,7 +110,7 @@ namespace OfflineTest
         [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
         public void MustThrowErrorOnWrongSEhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
@@ -121,9 +120,9 @@ namespace OfflineTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void MustThrowErrorOnWrongNOPhone()
+        public void MustThrowErrorOnWrongNoPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
@@ -132,7 +131,7 @@ namespace OfflineTest
         }
 
         [TestMethod]
-        public void PostBackUrlHasToBeHTTPS()
+        public void PostBackUrlHasToBeHttps()
         {
             OfflineOrder t = new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
@@ -146,9 +145,9 @@ namespace OfflineTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void PostBackUrlCannotBeHTTP()
+        public void PostBackUrlCannotBeHttp()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+           new OfflineOrder(new Cart(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testid", "testid", MerchantConfig.Server.Test),
                 "test",
@@ -199,9 +198,9 @@ namespace OfflineTest
         }
 
         [TestMethod]
-        public void CanCreateOrderOnID()
+        public void CanCreateOrderOnId()
         {
-            OfflineOrder t = new OfflineOrder("04341105793e19059ed14b39622bfaeb09484541",
+           new OfflineOrder("04341105793e19059ed14b39622bfaeb09484541",
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
                     "testShared", "testid", MerchantConfig.Server.Test));
         }

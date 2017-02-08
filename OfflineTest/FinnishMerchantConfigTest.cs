@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Klarna.Offline.Entities;
 
@@ -11,7 +10,7 @@ namespace OfflineTest
         [TestMethod]
         public void MustBeAbleToInitWithFinland()
         {
-            var t = new MerchantConfig(new System.Globalization.CultureInfo(1), "EUR", "FI", "test", "test",
+            var t = new MerchantConfig(new CultureInfo(1), "EUR", "FI", "test", "test",
                 MerchantConfig.Server.Live);
             Assert.AreNotEqual(null, t);
         }
