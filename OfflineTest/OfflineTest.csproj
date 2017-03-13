@@ -70,6 +70,7 @@
     <Compile Include="FinnishMerchantConfigTest.cs" />
     <Compile Include="JsonConverterTest.cs" />
     <Compile Include="OfflineOrderTest.cs" />
+    <Compile Include="RegexValidatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Offline\Offline.csproj">

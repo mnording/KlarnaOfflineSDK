@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using System.CodeDom;
+using System.Reflection;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Klarna.Entities;
@@ -16,7 +17,7 @@ namespace Klarna.Offline
     public class OfflineOrder : Order
     {
         string _merchantReference;
-
+        string _merchantReference2;
         public enum Status { NotSent, Sent, Pending, Polling, Complete }
         Status _status;
         MerchantConfig _config;
@@ -111,6 +112,15 @@ namespace Klarna.Offline
             _config = config;
             _status = Status.Sent;
         }
+
+        public void SetMerchantReference1(string reference)
+        {
+            _merchantReference = reference;
+        }
+        public void SetMerchantReference2(string reference)
+        {
+            _merchantReference2 = reference;
+        }
         /// <summary>
         /// Activating the order. Effectively sending the SMS to the customer phone
         /// </summary>
@@ -185,7 +195,7 @@ namespace Klarna.Offline
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.ContentType = "application/json";
-            request.UserAgent = "Mnording Instore SDK - 2.6.0";
+            request.UserAgent = "Mnording Instore SDK - "+ Assembly.GetExecutingAssembly().GetName().Version;
             request.Headers.Add("Authorization", "Basic " + digest);
             if (data != null)
             {
@@ -238,6 +248,10 @@ namespace Klarna.Offline
         public string merchant_reference1
         {
             get { return _merchantReference; }
+        }
+        public string merchant_reference2
+        {
+            get { return _merchantReference2; }
         }
         public string purchase_currency => _config.Currency.ToLower();
 

@@ -58,6 +58,7 @@
     <Compile Include="Entities\MerchantConfig.cs" />
     <Compile Include="Entities\OrderDetails.cs" />
     <Compile Include="Helpers\JsonConverter.cs" />
+    <Compile Include="Helpers\RegexValidator.cs" />
     <Compile Include="OfflineOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -245,3 +245,4 @@ ModelManifest.xml
 .fake/
 /Offline/Offline.nuspec
 /Offline/nuget.exe
+/Offline/CreateNuget_Release.bat
