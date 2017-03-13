@@ -9,6 +9,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Klarna.Entities;
+using Klarna.Offline.Helpers;
 using PhoneNumbers;
 using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
@@ -64,6 +65,10 @@ namespace Klarna.Offline
             throw new ArgumentException("Phone number incorrect");
         }
 
+        private void VerifyCart()
+        {
+            RegexValidator.ValidateCartItems(_cart);
+        }
         /// <summary>
         /// Initiating a new Klarna Offline Order 
         /// </summary>
@@ -82,7 +87,9 @@ namespace Klarna.Offline
             _terminalId = terminal;
             auto_activate = autoActivate;
             VerifyPhoneForCountry();
-            _merchantReference = merchantReference;
+            SetMerchantReference1(merchantReference);
+            VerifyCart();
+           RegexValidator.Validate(terminal);
 
         }
 
@@ -115,11 +122,14 @@ namespace Klarna.Offline
 
         public void SetMerchantReference1(string reference)
         {
+            RegexValidator.Validate(_merchantReference);
             _merchantReference = reference;
         }
         public void SetMerchantReference2(string reference)
         {
+            RegexValidator.Validate(_merchantReference2);
             _merchantReference2 = reference;
+           
         }
         /// <summary>
         /// Activating the order. Effectively sending the SMS to the customer phone
