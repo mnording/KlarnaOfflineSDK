@@ -43,6 +43,7 @@ namespace Klarna.Offline.Entities
         private void SetCommonParams(CultureInfo locale, string currency, string country, string sharedSecret, string merchantId, Server server)
         {
             VerifyCountries(currency, country);
+            VerifyLocale(locale);
             this.locale = locale.Name;
             purchaseCountry = country;
             purchaseCurrency = currency;
@@ -50,6 +51,15 @@ namespace Klarna.Offline.Entities
             this.sharedSecret = sharedSecret;
             this.server = server;
 
+        }
+
+        private void VerifyLocale(CultureInfo loc)
+        {
+            if (loc.Name.ToLower() == "sv-se" || loc.Name.ToLower() == "nb-no" || loc.Name.ToLower() == "fi-fi")
+            {
+                return;
+            }
+            throw new ArgumentNullException(loc.Name + " is not a supported locale");
         }
         private void VerifyCountries(string currency, string country)
         {

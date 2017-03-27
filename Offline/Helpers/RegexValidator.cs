@@ -17,6 +17,8 @@ namespace Klarna.Offline.Helpers
 
         public static void Validate(string input)
         {
+            if (input == null)
+                return;
             if(!r.IsMatch(input))
             {
                 throw new ArgumentException(input+" is not a valid string according to the API");

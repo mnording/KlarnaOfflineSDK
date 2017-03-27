@@ -12,14 +12,14 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void MustNotBeAbleToInitWrongCountry()
         {
-            new MerchantConfig(new CultureInfo(1), "SEK", "DE", "test", "test",
+            new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "DE", "test", "test",
                 MerchantConfig.Server.Live);
         }
 
         [TestMethod]
         public void MustBeAbleToInitWithSweden()
         {
-            var t = new MerchantConfig(new CultureInfo(1), "SEK", "SE", "test", "test",
+            var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE", "test", "test",
                 MerchantConfig.Server.Live);
             Assert.AreNotEqual(null, t);
         }
@@ -28,14 +28,14 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void MustNotBeAbleToInitWrongCurrency()
         {
-            new MerchantConfig(new CultureInfo(1), "EUR", "SE", "test", "test",
+            new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "EUR", "SE", "test", "test",
                 MerchantConfig.Server.Live);
         }
 
         [TestMethod]
         public void MustBeAbleToInitWithSwedishSek()
         {
-            var t = new MerchantConfig(new CultureInfo(1), "SEK", "SE", "test", "test",
+            var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE", "test", "test",
                 MerchantConfig.Server.Live);
             Assert.AreNotEqual(null, t);
         }

@@ -42,6 +42,7 @@ namespace OfflineTest
         {
             var customer = new Customer();
             customer.given_name = "awda";
+            customer.email = "test@email.com";
             customer.family_name = "awd";
             customer.street_address = "awda";
                 RegexValidator.ValidateCustomer(customer);

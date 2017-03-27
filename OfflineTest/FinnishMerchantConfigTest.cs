@@ -10,7 +10,7 @@ namespace OfflineTest
         [TestMethod]
         public void MustBeAbleToInitWithFinland()
         {
-            var t = new MerchantConfig(new CultureInfo(1), "EUR", "FI", "test", "test",
+            var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI", "test", "test",
                 MerchantConfig.Server.Live);
             Assert.AreNotEqual(null, t);
         }
