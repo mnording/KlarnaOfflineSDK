@@ -122,12 +122,12 @@ namespace Klarna.Offline
 
         public void SetMerchantReference1(string reference)
         {
-            RegexValidator.Validate(_merchantReference);
+            RegexValidator.Validate(reference);
             _merchantReference = reference;
         }
         public void SetMerchantReference2(string reference)
         {
-            RegexValidator.Validate(_merchantReference2);
+            RegexValidator.Validate(reference);
             _merchantReference2 = reference;
            
         }
@@ -247,6 +247,7 @@ namespace Klarna.Offline
             {
                 text = text + " {url}";
             }
+            RegexValidator.Validate(text);
             sms_text = text;
         }
         public void SetSender(string sender)

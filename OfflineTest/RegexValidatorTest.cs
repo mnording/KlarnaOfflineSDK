@@ -45,6 +45,8 @@ namespace OfflineTest
             customer.email = "test@email.com";
             customer.family_name = "awd";
             customer.street_address = "awda";
+            customer.postal_code = "2323";
+            customer.city = "234324";
                 RegexValidator.ValidateCustomer(customer);
         }
         [TestMethod]

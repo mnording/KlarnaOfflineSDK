@@ -13,16 +13,23 @@ namespace Klarna.Offline.Helpers
 {
     public static class RegexValidator
     {
-        static Regex r = new Regex(@"^[\wåäöæøÅÄÖÆØ@_ \-\.\s\,\:\@\(\)\[\]]*$");
+        static Regex r = new Regex(@"^[\wåäöæøÅÄÖÆØ@_ \-\.\s\,\:\@\(\)\[\]\{\}]*$");
 
         public static void Validate(string input)
         {
-            if (input == null)
-                return;
-            if(!r.IsMatch(input))
+            try
             {
-                throw new ArgumentException(input+" is not a valid string according to the API");
+
+                if (!r.IsMatch(input))
+                {
+                    throw new ArgumentException(input + " is not a valid string according to the API");
+                }
             }
+            catch (Exception e)
+            {
+                throw new ArgumentException(input + " is not a valid string according to the API");
+            }
+           
         }
         public static string RemoveInvalidChars(string input)
         {
