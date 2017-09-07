@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Klarna;
 using Klarna.Entities;
 using Klarna.Offline.Entities;
@@ -33,8 +34,8 @@ namespace OfflineTest
         [TestMethod]
         public void WillValidateCorrectCart()
         {
-         var cart = new Cart();
-            cart.addProduct(new CartRow("test", "testname", 2, 2000, VatMode.IncVat, 25));
+         var cart = new List<OrderLine>();
+            cart.Add(new OrderLine("test", 2, 2000, 25));
             RegexValidator.ValidateCartItems(cart);
         }
         [TestMethod]
@@ -53,8 +54,8 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void WillRejectInvalidCart()
         {
-            var cart = new Cart();
-            cart.addProduct(new CartRow("test", "testn' '`ame", 2, 2000, VatMode.IncVat, 25));
+            var cart = new List<OrderLine>();
+            cart.Add(new OrderLine("test '^'`",  2, 2000, 25));
             RegexValidator.ValidateCartItems(cart);
         }
         [TestMethod]

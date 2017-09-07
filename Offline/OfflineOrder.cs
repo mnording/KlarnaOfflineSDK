@@ -15,14 +15,14 @@ using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace Klarna.Offline
 {
-    public class OfflineOrder : Order
+    public class OfflineOrder
     {
         string _merchantReference;
         string _merchantReference2;
         public enum Status { NotSent, Sent, Pending, Polling, Complete }
         Status _status;
         MerchantConfig _config;
-        Cart _cart;
+        List<OrderLine> _cart;
         Uri _postbackUri;
         string _klarnaId;
         Uri _statusUrl;
@@ -67,7 +67,7 @@ namespace Klarna.Offline
 
         private void VerifyCart()
         {
-            RegexValidator.ValidateCartItems(_cart);
+            RegexValidator.ValidateCartItems(order_lines);
         }
         /// <summary>
         /// Initiating a new Klarna Offline Order 
@@ -78,7 +78,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) : base(cart, config)
+        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) 
         {
             mobile_no = phonenumber;
             _status = Status.NotSent;
@@ -103,7 +103,7 @@ namespace Klarna.Offline
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="postbackUri">The URL on your end that Klanra will push order data to after completion.</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(Cart cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
+        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, Uri postbackUri, bool autoActivate = true) : this(cart, config, terminal, phonenumber, merchantReference, autoActivate)
         {
             if (postbackUri.Scheme != "https")
             {
@@ -113,7 +113,7 @@ namespace Klarna.Offline
 
         }
 
-        public OfflineOrder(string orderId,MerchantConfig config):base(new Cart(), config)
+        public OfflineOrder(string orderId,MerchantConfig config)
         {
             _klarnaId = orderId;
             _config = config;
@@ -138,7 +138,7 @@ namespace Klarna.Offline
         {
             if (_status != Status.NotSent)
             {
-                throw new Exception("Order already created. Cancel and create a new one");
+                throw new System.Exception("Order already created. Cancel and create a new one");
                
             }
                
@@ -190,7 +190,7 @@ namespace Klarna.Offline
 
                 }
             }
-            catch (Exception)
+            catch (System.Exception)
             {
                 return null;
             }
@@ -201,7 +201,7 @@ namespace Klarna.Offline
         private HttpWebResponse SendRequest(Uri url, string method, JObject data = null)
         {
             var digestCreator = new Klarna.Helpers.DigestCreator();
-            var digest = digestCreator.CreateOffline(_config.MerchantId, _config.SharedSecret);
+            var digest = digestCreator.CreateDigest(_config.MerchantId, _config.SharedSecret);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.ContentType = "application/json";
@@ -224,14 +224,14 @@ namespace Klarna.Offline
         {
             if (_klarnaId == String.Empty)
             {
-                throw new Exception("Cannot cancel an order that has not been created");
+                throw new System.Exception("Cannot cancel an order that has not been created");
             }
             HttpWebResponse response =
                 SendRequest(new Uri(GetBaseUrl() + "/v1/" + _config.MerchantId + "/orders/" + _klarnaId + "/cancel"),
                     "POST");
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
-                throw new Exception("Something went wrong with the cancellation");
+                throw new System.Exception("Something went wrong with the cancellation");
             }
         }
         public void SetTextMessage(string text)
@@ -281,9 +281,9 @@ namespace Klarna.Offline
         {
             get { return _config.Locale.ToLower(); }
         }
-        public List<CartRow> order_lines
+        public List<OrderLine> order_lines
         {
-            get { return _cart.OrderLines; }
+            get { return _cart; }
         }
         public Status GetStatus()
         {
@@ -292,7 +292,7 @@ namespace Klarna.Offline
         public Uri GetStatusUrl() { return _statusUrl; }
         private string GetBaseUrl()
         {
-            if (_config.Environment == MerchantConfig.Server.Live)
+            if (_config.Server == Server.Live)
             {
                 return "https://buy.klarna.com";
             }
@@ -303,7 +303,7 @@ namespace Klarna.Offline
         {
             if (_klarnaId == "")
             {
-                throw new Exception("Order not created yet");
+                throw new System.Exception("Order not created yet");
             }
             return _klarnaId;
         }

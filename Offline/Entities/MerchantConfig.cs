@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Klarna.Entities;
 
 namespace Klarna.Offline.Entities
 {
@@ -8,9 +9,6 @@ namespace Klarna.Offline.Entities
         string locale;
         string purchaseCurrency;
         string purchaseCountry;
-        string merchantId;
-        string sharedSecret;
-        Server server;
 
         /// <summary>
         /// 
@@ -21,7 +19,7 @@ namespace Klarna.Offline.Entities
         /// <param name="sharedSecret">The sharedsecret between you and Klarna</param>
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
         /// <param name="server">What server is being targeted?</param>
-        public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId,Server server)
+        public MerchantConfig(CultureInfo locale, string currency, string country, string sharedSecret,string merchantId,Server server):base(merchantId,sharedSecret,server)
         {
             SetCommonParams(locale,currency,country,sharedSecret,merchantId,server);
         }
@@ -32,7 +30,7 @@ namespace Klarna.Offline.Entities
         /// <param name="sharedSecret">The sharedsecret between you and Klarna</param>
         /// <param name="merchantId">The merchant ID provided by Klarna</param>
         /// <param name="server">What server is being targeted?</param>
-        public MerchantConfig(CultureInfo culture, string sharedSecret, string merchantId, Server server)
+        public MerchantConfig(CultureInfo culture, string sharedSecret, string merchantId, Server server) : base(merchantId, sharedSecret, server)
         {
             var region = new RegionInfo(culture.LCID);
             var country = region.TwoLetterISORegionName;
@@ -49,7 +47,7 @@ namespace Klarna.Offline.Entities
             purchaseCurrency = currency;
             this.merchantId = merchantId;
             this.sharedSecret = sharedSecret;
-            this.server = server;
+            this.Server = server;
 
         }
 
@@ -107,11 +105,6 @@ namespace Klarna.Offline.Entities
         public string MerchantId
         {
             get { return merchantId; }
-        }
-        public enum Server {  Test,Live }
-        public Server Environment
-        {
-            get { return server; }
         }
     }
 }

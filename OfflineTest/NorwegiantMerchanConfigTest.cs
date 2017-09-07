@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
+using Klarna.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Klarna.Offline.Entities;
+using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace OfflineTest
 {
@@ -11,7 +12,7 @@ namespace OfflineTest
         public void MustBeAbleToInitWithNorway()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreNotEqual(null, t);
         }
         /*####################### 2nd Construct Test ######################### */
@@ -20,14 +21,14 @@ namespace OfflineTest
         public void MustBeAbleToInitWithNorwaySettingCountry()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("NO", t.Country);
         }
         [TestMethod]
         public void MustBeAbleToInitWithNorwaySettingCurrency()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("NOK", t.Currency);
         }
 
@@ -35,7 +36,7 @@ namespace OfflineTest
         public void MustBeAbleToInitWithNorwaySettingLocale()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("nb-NO", t.Locale);
         }
     }

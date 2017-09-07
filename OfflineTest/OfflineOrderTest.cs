@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Klarna.Offline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,9 +14,9 @@ namespace OfflineTest
         [TestMethod]
         public void MustValidateSwedishPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(), 
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46700024576",
                 "ref");
@@ -25,23 +26,23 @@ namespace OfflineTest
         [TestMethod]
         public void MustValidateNorwegianPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+4790000000",
                 "ref");
             Assert.IsNotNull(t);
-            t = new OfflineOrder(new Cart(),
+            t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+4740000000",
                 "ref");
             Assert.IsNotNull(t);
-            t = new OfflineOrder(new Cart(),
+            t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+4759000000",
                 "ref");
@@ -52,30 +53,30 @@ namespace OfflineTest
         [TestMethod]
         public void MustValidateFinnishPhone()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+358401234567",
                 "ref");
             Assert.IsNotNull(t);
-            t = new OfflineOrder(new Cart(),
+            t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+358501234",
                 "ref");
             Assert.IsNotNull(t);
-            t = new OfflineOrder(new Cart(),
+            t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+35845733654578",
                 "ref");
             Assert.IsNotNull(t);
-            t = new OfflineOrder(new Cart(),
+            t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+35850457894",
                 "ref");
@@ -86,9 +87,9 @@ namespace OfflineTest
         [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
         public void MustThrowErrorOnToLongFiPhone()
         {
-            new OfflineOrder(new Cart(),
+            new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+3584012345673332231312312",
                 "ref");
@@ -98,9 +99,9 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void MustThrowErrorOnToShortFiPhone()
         {
-            new OfflineOrder(new Cart(),
+            new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+35842",
                 "ref");
@@ -110,9 +111,9 @@ namespace OfflineTest
         [ExpectedException(typeof(PhoneNumbers.NumberParseException))]
         public void MustThrowErrorOnWrongSEhone()
         {
-            new OfflineOrder(new Cart(),
+            new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46700024576223423422",
                 "ref");
@@ -122,9 +123,9 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void MustThrowErrorOnWrongNoPhone()
         {
-            new OfflineOrder(new Cart(),
+            new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("nb-no"), "NOK", "NO",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+439000000000000",
                 "ref");
@@ -133,9 +134,9 @@ namespace OfflineTest
         [TestMethod]
         public void PostBackUrlHasToBeHttps()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46729922222",
                 "ref", new Uri("https://www.test.com"));
@@ -147,9 +148,9 @@ namespace OfflineTest
         [ExpectedException(typeof(ArgumentException))]
         public void PostBackUrlCannotBeHttp()
         {
-           new OfflineOrder(new Cart(),
+           new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46729922222",
                 "ref", new Uri("http://www.test.com"));
@@ -158,9 +159,9 @@ namespace OfflineTest
         [TestMethod]
         public void CanSetOwnText()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46729922222",
                 "ref", new Uri("https://www.test.com"));
@@ -172,9 +173,9 @@ namespace OfflineTest
         [TestMethod]
         public void AutoAddingUrlPlaceholder()
         {
-            OfflineOrder offlineOrder = new OfflineOrder(new Cart(),
+            OfflineOrder offlineOrder = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46729922222",
                 "ref", new Uri("https://www.test.com"));
@@ -186,9 +187,9 @@ namespace OfflineTest
         [TestMethod]
         public void CorrectingWrongPlaceholder()
         {
-            OfflineOrder t = new OfflineOrder(new Cart(),
+            OfflineOrder t = new OfflineOrder(new List<OrderLine>(),
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testid", "testid", MerchantConfig.Server.Test),
+                    "testid", "testid", Server.Playground),
                 "test",
                 "+46729922222",
                 "ref", new Uri("https://www.test.com"));
@@ -202,7 +203,7 @@ namespace OfflineTest
         {
            new OfflineOrder("04341105793e19059ed14b39622bfaeb09484541",
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE",
-                    "testShared", "testid", MerchantConfig.Server.Test));
+                    "testShared", "testid", Server.Playground));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Klarna.Offline.Helpers
                     throw new ArgumentException(input + " is not a valid string according to the API");
                 }
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new ArgumentException(input + " is not a valid string according to the API");
             }
@@ -55,12 +55,16 @@ namespace Klarna.Offline.Helpers
             return result;
         }
 
-        public static void ValidateCartItems(Cart c)
+        public static void ValidateCartItems(List<OrderLine> c)
         {
-            foreach (CartRow row in c.OrderLines)
+            foreach (OrderLine row in c)
             {
-                Validate(row.name);
-                Validate(row.reference);
+                Validate(row.Name);
+                if (row.Reference != null)
+                {
+                    Validate(row.Reference);
+                }
+               
             }
         }
         public static void ValidateCustomer(Customer customer)

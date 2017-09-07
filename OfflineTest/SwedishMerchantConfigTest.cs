@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using Klarna.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Klarna.Offline.Entities;
+using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace OfflineTest
 {
@@ -13,14 +14,14 @@ namespace OfflineTest
         public void MustNotBeAbleToInitWrongCountry()
         {
             new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "DE", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
         }
 
         [TestMethod]
         public void MustBeAbleToInitWithSweden()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreNotEqual(null, t);
         }
 
@@ -29,14 +30,14 @@ namespace OfflineTest
         public void MustNotBeAbleToInitWrongCurrency()
         {
             new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "EUR", "SE", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
         }
 
         [TestMethod]
         public void MustBeAbleToInitWithSwedishSek()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "SEK", "SE", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreNotEqual(null, t);
         }
 
@@ -46,21 +47,21 @@ namespace OfflineTest
         public void MustBeAbleToInitWithSwedenSettingCountry()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("SE", t.Country);
         }
         [TestMethod]
         public void MustBeAbleToInitWithSwedenOnlySettingCurrency()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("SEK", t.Currency);
         }
         [TestMethod]
         public void MustBeAbleToInitWithSwedenOnlySettingLocale()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("sv-se"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("sv-SE", t.Locale);
         }
 

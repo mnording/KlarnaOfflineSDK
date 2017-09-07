@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
+using Klarna.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Klarna.Offline.Entities;
+using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace OfflineTest
 {
@@ -11,7 +12,7 @@ namespace OfflineTest
         public void MustBeAbleToInitWithFinland()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI", "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreNotEqual(null, t);
         }
 
@@ -21,21 +22,21 @@ namespace OfflineTest
         public void MustBeAbleToInitWithFinlandSettingCountry()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("FI", t.Country);
         }
         [TestMethod]
         public void MustBeAbleToInitWithFinlandSettingCurrency()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("EUR", t.Currency);
         }
         [TestMethod]
         public void MustBeAbleToInitWithFinlandSettingLocale()
         {
             var t = new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "test", "test",
-                MerchantConfig.Server.Live);
+                Server.Live);
             Assert.AreEqual("fi-FI", t.Locale);
         }
     }
