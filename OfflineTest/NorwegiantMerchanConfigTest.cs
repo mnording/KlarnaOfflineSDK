@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Klarna;
 using Klarna.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;

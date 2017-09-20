@@ -15,7 +15,7 @@ using MerchantConfig = Klarna.Offline.Entities.MerchantConfig;
 
 namespace Klarna.Offline
 {
-    public class OfflineOrder
+    public class OfflineOrder : Order
     {
         string _merchantReference;
         string _merchantReference2;
@@ -68,6 +68,18 @@ namespace Klarna.Offline
         private void VerifyCart()
         {
             RegexValidator.ValidateCartItems(order_lines);
+            CleanCart();
+        }
+
+        private void CleanCart()
+        {
+            for (var i = 0; i < order_lines.Count; i++)
+            {
+                order_lines[i].TotalTaxAmount = (int?)null;
+                order_lines[i].TotalAmount = (int?)null;
+                order_lines[i].TotalDiscountAmount = (int?)null;
+            }
+                  
         }
         /// <summary>
         /// Initiating a new Klarna Offline Order 
@@ -78,7 +90,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) 
+        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) :base(cart,null)
         {
             mobile_no = phonenumber;
             _status = Status.NotSent;
@@ -113,7 +125,7 @@ namespace Klarna.Offline
 
         }
 
-        public OfflineOrder(string orderId,MerchantConfig config)
+        public OfflineOrder(string orderId,MerchantConfig config):base(null,null)
         {
             _klarnaId = orderId;
             _config = config;

@@ -71,7 +71,7 @@ namespace OfflineTest
                 new MerchantConfig(CultureInfo.CreateSpecificCulture("fi-fi"), "EUR", "FI",
                     "testid", "testid", Server.Playground),
                 "test",
-                "+35845733654578",
+                "+358457336545",
                 "ref");
             Assert.IsNotNull(t);
             t = new OfflineOrder(new List<OrderLine>(),

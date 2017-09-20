@@ -59,6 +59,7 @@ namespace Klarna.Offline.Helpers
         {
             foreach (OrderLine row in c)
             {
+                
                 Validate(row.Name);
                 if (row.Reference != null)
                 {
