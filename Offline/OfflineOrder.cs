@@ -68,19 +68,10 @@ namespace Klarna.Offline
         private void VerifyCart()
         {
             RegexValidator.ValidateCartItems(order_lines);
-            CleanCart();
+            
         }
 
-        private void CleanCart()
-        {
-            for (var i = 0; i < order_lines.Count; i++)
-            {
-                order_lines[i].TotalTaxAmount = (int?)null;
-                order_lines[i].TotalAmount = (int?)null;
-                order_lines[i].TotalDiscountAmount = (int?)null;
-            }
-                  
-        }
+       
         /// <summary>
         /// Initiating a new Klarna Offline Order 
         /// </summary>
@@ -90,7 +81,7 @@ namespace Klarna.Offline
         /// <param name="phonenumber">Phonenumber of the customer incl countrycode</param>
         /// <param name="merchantReference">The store-reference for this order</param>
         /// <param name="autoActivate">Should this order be converted to an invoice automatically?</param>
-        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) :base(cart,null)
+        public OfflineOrder(List<OrderLine> cart, MerchantConfig config, string terminal, string phonenumber, string merchantReference, bool autoActivate = true) :base(null)
         {
             mobile_no = phonenumber;
             _status = Status.NotSent;
